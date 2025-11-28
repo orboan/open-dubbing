@@ -171,10 +171,12 @@ class Dubber:
     def pyannote_pipeline(self) -> Pipeline:
         """Loads the PyAnnote diarization pipeline."""
         import torch.serialization
+        from pyannote.audio.core.task import Specifications
 
-        torch.serialization.add_safe_globals(
-            [torch.torch_version.TorchVersion]
-        )
+        torch.serialization.add_safe_globals([
+            torch.torch_version.TorchVersion,
+            Specifications,
+        ])
 
         return Pipeline.from_pretrained(
             self.pyannote_model, use_auth_token=self.hugging_face_token
