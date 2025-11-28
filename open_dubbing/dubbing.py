@@ -170,6 +170,12 @@ class Dubber:
     @functools.cached_property
     def pyannote_pipeline(self) -> Pipeline:
         """Loads the PyAnnote diarization pipeline."""
+        import torch.serialization
+
+        torch.serialization.add_safe_globals(
+            [torch.torch_version.TorchVersion]
+        )
+
         return Pipeline.from_pretrained(
             self.pyannote_model, use_auth_token=self.hugging_face_token
         )
