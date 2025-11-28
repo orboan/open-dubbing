@@ -36,6 +36,7 @@ from open_dubbing.text_to_speech_edge import TextToSpeechEdge
 from open_dubbing.text_to_speech_mms import TextToSpeechMMS
 from open_dubbing.translation_apertium import TranslationApertium
 from open_dubbing.translation_nllb import TranslationNLLB
+from open_dubbing.translation_nmt import TranslationNMT
 
 
 def _init_logging(log_level):
@@ -195,19 +196,30 @@ def _get_selected_tts(
 
 
 def _get_selected_translator(
-    translator: str, nllb_model: str, apertium_server: str, device: str
+    translator: str, nllb_model: str, apertium_server: str, device: str, nmt_server: str
 ):
     if translator == "nllb":
         translation = TranslationNLLB(device)
         translation.load_model(nllb_model)
+
     elif translator == "apertium":
-        server = apertium_server
-        if len(server) == 0:
-            msg = "When using Apertium's API, you need to specify with --apertium_server the URL of the server"
+        if not apertium_server:
+            msg = (
+                "When using Apertium's API, you need to specify with "
+                "--apertium_server the URL of the server"
+            )
             log_error_and_exit(msg, ExitCode.NO_APERTIUM_SERVER)
 
         translation = TranslationApertium(device)
-        translation.set_server(server)
+        translation.set_server(apertium_server)
+
+    elif translator == "nmt":
+        if not nmt_server:
+            msg = "When using NMT, you need to specify --nmt_server"
+            log_error_and_exit(msg, ExitCode.NO_APERTIUM_SERVER)
+
+        translation = TranslationNMT(nmt_server)
+
     else:
         raise ValueError(f"Invalid translator value {translator}")
 
@@ -282,7 +294,11 @@ def main():
         logger().info(f"Detected language '{source_language}'")
 
     translation = _get_selected_translator(
-        args.translator, args.nllb_model, args.apertium_server, args.device
+    	args.translator,
+    	args.nllb_model,
+    	args.apertium_server,
+    	args.device,
+    	args.nmt_server,
     )
 
     check_languages(

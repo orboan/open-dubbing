@@ -107,11 +107,12 @@ class CommandLine:
             "--translator",
             type=str,
             default="nllb",
-            choices=["nllb", "apertium"],
+            choices=["nllb", "apertium","nmt"],
             help=(
                 "Translation engine to use. Choices are:\n"
                 "'nllb': Meta's no Language Left Behind (NLLB).\n"
                 "'apertium': Apertium compatible API server.\n"
+                "'nmt': NMT Softcatalà API server.\n"
             ),
         )
         parser.add_argument(
@@ -120,6 +121,13 @@ class CommandLine:
             default="",
             help=("Apertium's URL server to use"),
         )
+	
+	parser.add_argument(
+	    "--nmt_server",
+	    type=str,
+	    default="http://localhost:8700",
+	    help="Local NMT server URL (Softcatalà compatible)",
+	)
 
         parser.add_argument(
             "--device",
