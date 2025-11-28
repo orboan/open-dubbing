@@ -102,7 +102,6 @@ class CommandLine:
             action="store_true",
             help="Enable VAD filter when using faster-whisper (reduces hallucinations).",
         )
-
         parser.add_argument(
             "--translator",
             type=str,
@@ -120,15 +119,13 @@ class CommandLine:
             type=str,
             default="",
             help=("Apertium's URL server to use"),
+        )	
+        parser.add_argument(
+            "--nmt_server",
+            type=str,
+            default="http://localhost:8700",
+            help="Local NMT server URL (Softcatalà compatible)",
         )
-	
-	parser.add_argument(
-	    "--nmt_server",
-	    type=str,
-	    default="http://localhost:8700",
-	    help="Local NMT server URL (Softcatalà compatible)",
-	)
-
         parser.add_argument(
             "--device",
             type=str,
